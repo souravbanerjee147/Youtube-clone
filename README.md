@@ -89,7 +89,6 @@ A full-featured YouTube clone built with the MERN stack (MongoDB, Express, React
    ```bash
    npm run seed
    ```
-
 5. **Start the backend server**
    ```bash
    npm run dev
@@ -116,7 +115,12 @@ A full-featured YouTube clone built with the MERN stack (MongoDB, Express, React
    });
    ```
 
-4. **Start the frontend development server**
+4. **Bootstrap Instalation**
+   ```bash
+   npm install bootstrap bootstrap-icons react-bootstrap
+   ```
+
+5. **Start the frontend development server**
    ```bash
    npm run dev
    ```
@@ -369,7 +373,3 @@ Project Link: https://github.com/souravbanerjee147/Youtube-clone.git
 ---
 
 **Happy Coding!** 🚀
-
-
-
-what are the thing i need to do assuming i only have the code files, no dependecy nor anyth setup done, just assume i have the code file only, so what steeps i need to take to setup the entire proroject, and initiat the project
