@@ -1,68 +1,374 @@
-:root {
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
-
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
-
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-  margin: 0;
-  display: flex;
-  place-items: center;
-  min-width: 320px;
+  font-family: 'Roboto', 'Segoe UI', Arial, sans-serif;
+  background-color: #f9f9f9;
+  color: #0f0f0f;
+  overflow-x: hidden;
+  padding-top: 56px;
+  /* Prevent content from hiding under fixed navbar */
+}
+
+/* Dark theme */
+[data-theme="dark"] body {
+  background-color: #0f0f0f;
+  color: #f1f1f1;
+}
+
+/* ========== HEADER & NAVBAR STYLES ========== */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1030;
+  height: 56px;
+}
+
+/* ========== SIDEBAR STYLES ========== */
+.sidebar-mobile {
+  position: fixed;
+  left: 0;
+  top: 56px !important;
+  /* Fixed position below navbar */
+  height: calc(100vh - 56px) !important;
+  /* Full viewport minus navbar height */
+  width: 240px;
+  z-index: 1020;
+  /* Below navbar but above content */
+  overflow-y: auto;
+  transition: transform 0.3s ease;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.1);
+  background-color: #f8f9fa;
+}
+
+[data-theme="dark"] .sidebar-mobile {
+  background-color: #212121 !important;
+  box-shadow: 2px 0 8px rgba(0, 0, 0, 0.3);
+}
+
+.sidebar-mobile-hidden {
+  transform: translateX(-100%);
+}
+
+.sidebar-mobile-visible {
+  transform: translateX(0);
+}
+
+/* Sidebar overlay for mobile */
+.sidebar-overlay {
+  position: fixed;
+  top: 56px !important;
+  /* Start below navbar */
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1019;
+  /* Below sidebar but above content */
+  display: none;
+}
+
+.sidebar-overlay.active {
+  display: block;
+}
+
+/* ========== MAIN CONTENT STYLES ========== */
+.main-content {
+  margin-top: 56px;
+  /* Start below navbar */
+  min-height: calc(100vh - 56px);
+  transition: all 0.3s ease;
+  width: 100%;
+  position: relative;
+}
+
+/* When sidebar is open on desktop (≥ 992px) */
+@media (min-width: 992px) {
+  .sidebar-mobile {
+    position: fixed;
+    transform: translateX(0) !important;
+  }
+
+  /* When sidebar is visible, shift main content */
+  .main-content {
+    margin-left: 240px;
+    /* Make room for sidebar */
+    width: calc(100% - 240px);
+  }
+
+  /* When sidebar is hidden on desktop */
+  .sidebar-mobile-hidden+.main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+}
+
+/* Mobile adjustments (< 992px) */
+@media (max-width: 991.98px) {
+  .sidebar-mobile {
+    z-index: 1020;
+  }
+
+  .main-content {
+    margin-left: 0;
+    width: 100%;
+  }
+
+  /* When sidebar is open on mobile, shift content */
+  .sidebar-mobile-visible~.main-content {
+    margin-left: 240px;
+    width: calc(100% - 240px);
+    position: fixed;
+    right: 0;
+  }
+}
+
+/* Pages without sidebar (login, register) */
+.no-sidebar {
+  margin-left: 0 !important;
+  width: 100% !important;
+}
+
+/* Prevent body scroll when sidebar is open on mobile */
+body.sidebar-open {
+  overflow: hidden;
+}
+
+/* ========== VIDEO PLAYER STYLES ========== */
+.video-player-container {
+  position: relative;
+  width: 100%;
+  padding-bottom: 56.25%;
+  /* 16:9 Aspect Ratio */
+  height: 0;
+}
+
+.video-player-container iframe,
+.video-player-container video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  border-radius: 12px;
+}
+
+/* ========== CUSTOM SCROLLBAR ========== */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+[data-theme="dark"] ::-webkit-scrollbar-track {
+  background: #2d2d2d;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+/* ========== THEME TOGGLE BUTTON ========== */
+.theme-toggle-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  z-index: 999;
+}
+
+/* ========== UTILITY CLASSES ========== */
+.text-truncate-2 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.text-truncate-3 {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+/* ========== BOOTSTRAP OVERRIDES ========== */
+.btn-danger {
+  background-color: #ff0000;
+  border-color: #ff0000;
+}
+
+.btn-danger:hover {
+  background-color: #cc0000;
+  border-color: #cc0000;
+}
+
+.navbar-dark .navbar-brand {
+  color: #fff;
+}
+
+/* ========== CHANNEL BANNER ========== */
+.channel-banner {
+  height: 200px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* ========== RESPONSIVE ADJUSTMENTS ========== */
+@media (max-width: 768px) {
+  .channel-banner {
+    height: 150px;
+  }
+
+  .video-player-container {
+    margin: 0 -1rem;
+    width: calc(100% + 2rem);
+  }
+}
+
+/* ========== LOADING STATES ========== */
+.loading-shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+[data-theme="dark"] .loading-shimmer {
+  background: linear-gradient(90deg, #2d2d2d 25%, #3d3d3d 50%, #2d2d2d 75%);
+}
+
+/* ========== COMMENTS SECTION ========== */
+.comment-item {
+  border-left: 3px solid #dee2e6;
+  padding-left: 1rem;
+}
+
+[data-theme="dark"] .comment-item {
+  border-left-color: #444;
+}
+
+/* ========== CARD HOVER EFFECTS ========== */
+.card-hover:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: all 0.2s ease;
+}
+
+[data-theme="dark"] .card-hover:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+/* ========== FORM VALIDATION ========== */
+.is-invalid {
+  border-color: #dc3545;
+}
+
+.invalid-feedback {
+  display: block;
+  color: #dc3545;
+  font-size: 0.875rem;
+  margin-top: 0.25rem;
+}
+
+/* ========== CONTAINER FIXES ========== */
+/* Ensure containers work properly with sidebar */
+.container-fluid {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* For pages with sidebar */
+.with-sidebar .container-fluid {
+  padding-left: 15px;
+  padding-right: 15px;
+}
+
+/* ========== PAGE SPECIFIC FIXES ========== */
+/* Fix for VideoDetail page */
+.video-detail-page {
+  padding-top: 20px;
+}
+
+/* Fix for ChannelPage */
+.channel-page {
+  padding-top: 20px;
+}
+
+/* Fix for HomePage grid */
+.homepage-grid {
+  padding: 15px;
+}
+
+
+
+
+/* ========== DEBUG HELPERS  ========== */
+.debug-border {
+  border: 1px solid red !important;
+}
+
+
+
+
+.debug-border-blue {
+  border: 1px solid blue !important;
+}
+
+.debug-border-green {
+  border: 1px solid green !important;
+}
+
+/* ========== OVERRIDES ========== */
+
+.App {
+  position: relative;
   min-height: 100vh;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+/* Removeing old conflicting classes */
+.main-content-shifted {
+  margin-left: 0 !important;
+  transform: none !important;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
-  border-color: #646cff;
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.navbar {
+  z-index: 1030;
 }
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.sidebar-mobile {
+  z-index: 1020;
+}
+
+.sidebar-overlay {
+  z-index: 1019;
+}
+
+.main-content {
+  z-index: 1;
 }
